@@ -1,10 +1,25 @@
+<!-- layout내 footer/header로 분리에 따른 주석 @ 2020.10.26 LSH
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>스프링부트 웹 Dynamic Shark 서비스</title>
+    <title>스프링 부트 웹 Dynamic Shark 서비스</title>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
 </head>
 <body>
     <h1>스프링부트로 시작하는 DS 게시판</h1>
 </body>
 </html>
+-->
+
+{{>layout/header}}
+
+    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.0</h1>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/posts/save" role="button" class="btn btn-primary">글 등록</a>
+            </div>
+        </div>
+    </div>
+
+{{>layout/footer}}
