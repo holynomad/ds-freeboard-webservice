@@ -19,20 +19,20 @@ import com.google.api.services.youtube.model.Video;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class YouTubeService implements YouTubeRepository {
 
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = new JacksonFactory();
-    private static final long NUMBER_OF_VIDEOS_RETURNED = 1;
+    private static final long NUMBER_OF_VIDEOS_RETURNED = 5;
     private static YouTube youtube;
+    /** Global instance properties filename. */
+    private static String PROPERTIES_FILENAME = "youtube.properties";
 
     private static void prettyPrint(Iterator<Video> iteratorSearchResults, YouTubeSearchDto youTubeDto) {
 
@@ -68,6 +68,18 @@ public class YouTubeService implements YouTubeRepository {
 
     @Override
     public YouTubeSearchDto get() {
+
+        Properties properties = new Properties();
+        try {
+            InputStream in = YouTube.Search.class.getResourceAsStream("/" + PROPERTIES_FILENAME);
+            properties.load(in);
+
+        } catch (IOException e) {
+            System.err.println("There was an error reading " + PROPERTIES_FILENAME + ": " + e.getCause()
+                    + " : " + e.getMessage());
+            System.exit(1);
+        }
+
         YouTubeSearchDto youTubeDto = new YouTubeSearchDto();
 
         try {
@@ -77,9 +89,10 @@ public class YouTubeService implements YouTubeRepository {
             }).setApplicationName("youtube-video-duration-get").build();
 
             //내가 원하는 정보 지정할 수 있어요. 공식 API문서를 참고해주세요.
+            String apiKey = properties.getProperty("youtube.apikey");
             YouTube.Videos.List videos = youtube.videos().list("id,snippet,contentDetails");
-            videos.setKey("AIzaSyAO0Ka2xeQ4Y2KcY465Nc1DGmCl9nzH2ic"); //### 여기에 앞서 받은 API키를 입력해야 합니다.
-            videos.setId("TgOu00Mf3kI"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
+            videos.setKey(apiKey); //### 여기에 앞서 받은 API키를 입력해야 합니다.
+            videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
             videos.setMaxResults(NUMBER_OF_VIDEOS_RETURNED); //조회 최대 갯수.
             List<Video> videoList = videos.execute().getItems();
 
@@ -98,6 +111,8 @@ public class YouTubeService implements YouTubeRepository {
 
         return youTubeDto;
     }
+
+
 }
 
 
