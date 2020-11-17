@@ -1,5 +1,6 @@
 package com.ds.freeboard.web;
 
+import com.ds.freeboard.config.auth.LoginUser;
 import com.ds.freeboard.config.auth.dto.SessionUser;
 import com.ds.freeboard.service.posts.PostsService;
 import com.ds.freeboard.web.dto.PostsResponseDto;
@@ -19,10 +20,11 @@ public class IndexController {
     private final HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @LoginUser SessionUser user) { // annotation 적용 @ 2020.11.17.
         model.addAttribute("posts", postsService.findAllDesc());
 
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
+        // annotation 개선에 따른 주석 @ 2020.11.17.
+        //SessionUser user = (SessionUser) httpSession.getAttribute("user");
 
         if (user != null) {
             model.addAttribute("userName", user.getName());
