@@ -13,7 +13,8 @@
 
 {{>layout/header}}
 
-    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.3.1</h1>
+    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.3.2</h1>
+    <h6>- 네이버 OAuth2 API 연계 로그인 기능 추가</h6>
     <div class="col-md-12">
         <!-- login area -->
         <div class="row">
@@ -26,6 +27,8 @@
 
                 {{^userName}}
                     <a href="/oauth2/authorization/google" class="btn btn-success active" role="button">Google Login</a>
+
+                    <a href="/oauth2/authorization/naver" class="btn btn-secondary active" role="button">Naver Login</a>
                 {{/userName}}
             </div>
         </div>
