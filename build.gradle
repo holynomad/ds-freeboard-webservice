@@ -39,4 +39,5 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-mustache')
     compile('com.google.api-client:google-api-client:1.30.9')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.security:spring-security-test')
 }
