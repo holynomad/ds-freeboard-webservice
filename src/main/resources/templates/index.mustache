@@ -13,8 +13,9 @@
 
 {{>layout/header}}
 
-    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4</h1>
-    <h6> - 기존 ds-youtube-search 프론트 로직 머지</h6>
+    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4.1</h1>
+    <h6>   - 기존 ds-youtube-search 프론트 로직 머지</h6>
+    <h6>   - YouTube API v3 이용한 크롤링 연동</h6>
     <div class="col-md-12">
         <!-- login area -->
         <div class="row">
@@ -63,14 +64,16 @@
             </div>
         </div>
         <br>
-        <h1>다샤 Youtube Search (B/O Pilot ver 1.6.8 이관)</h1>
+        <h2>다샤 Youtube Search (B/O Pilot ver 1.6.8 이관)</h2>
         <form>
             <div class="form-group">
                 <input type="text" class="form-control" id="search">
             </div>
+            <!--
             <div class="form-group">
                 <input type="submit" class="btn btn-danger" value="search">
             </div>
+            -->
         </form>
         <form id="printOut">
             <input type="button" value="export2" class="btn btn-info" id="export">
@@ -126,10 +129,7 @@
                         <td>Label</td> <!-- labelling 컬럼 추가 @ 2020.12.28 -->
                     </tr>
                 </head>
-                <tbody id="videos">
-
-                </tbody>
-
+                <tbody id="videos"></tbody>
             </table>
         </form>
     </div>
