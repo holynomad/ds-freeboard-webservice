@@ -13,8 +13,8 @@
 
 {{>layout/header}}
 
-    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.3.3</h1>
-    <h6> - 스프링 시큐리티 연동한 유닛테스트 반영</h6>
+    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4</h1>
+    <h6> - 기존 ds-youtube-search 프론트 로직 머지</h6>
     <div class="col-md-12">
         <!-- login area -->
         <div class="row">
@@ -34,13 +34,36 @@
         </div>
         <br>
         <!-- contents area -->
+        <br>
+        <!-- 자유게시판 그리드(테이블) 출력 영역 -->
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+            <tr>
+                <th>글번호</th>
+                <th>제목</th>
+                <th>작성자</th>
+                <th>최종수정일</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {{#posts}}
+                <tr>
+                    <td>{{id}}</td>
+                    <td><a href="/posts/update/{{id}}">{{title}}</a></td>
+                    <td>{{author}}</td>
+                    <td>{{modifiedDate}}</td>
+                </tr>
+            {{/posts}}
+            </tbody>
+        </table>
+        <!-- 다샤 콘텐츠 크롤링 영역 (키워드-페이지-결과테이블) 출력 영역 merge (from ds-youtube-search\index.html) @ 2021.01.04. -->
         <div class="row">
             <div class="col-md-6">
                 <a href="/youtube" role="button" class="btn btn-primary">유튜브 API 테스트</a>
             </div>
         </div>
         <br>
-        <h1>Search</h1>
+        <h1>다샤 Youtube Search (B/O Pilot ver 1.6.8 이관)</h1>
         <form>
             <div class="form-group">
                 <input type="text" class="form-control" id="search">
@@ -49,28 +72,66 @@
                 <input type="submit" class="btn btn-danger" value="search">
             </div>
         </form>
+        <form id="printOut">
+            <input type="button" value="export2" class="btn btn-info" id="export">
+        </form>
+        <form id="channelInfo">
+            <div class="form-group">
+                <!--<input type="text" class="form-control" id="totalResults">-->
+                <div id="totalResults">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <!--<input type="text" class="form-control" id="nextPageToken">-->
+                <input type="text" class="form-control" id="nextPageToken">
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-danger" value="next-page">
+            </div>
+        </form>
+        <form id="videoInfo">
+            <!--<div class="row">-->
+            <!--<div class="col-md-12">-->
+            <table id="links" border="2">
+                <!-- 아래 CSS 참조 : http://jsfiddle.net/3rtfcy10/5/ -->
+                <style>
+                    table {
+                        table-layout: fixed;
+                        border-collapse: collapse;
+                    }
+
+                    table th,
+                    table td {
+                        padding: 5px;
+                        max-width: 440px;
+                        mix-width: 80px;
+                        text-align: center;
+                        background-color: blanchedalmond;
+                    }
+                </style>
+                <head>
+                    <tr>
+                        <td>Link</td>
+                        <td>Video Id</td>
+                        <td>Channel Id</td>
+                        <td>Channel</td>
+                        <td>Title</td>
+                        <td>Desc.</td>
+                        <td>PublishAt</td>
+                        <td>Time</td>
+                        <td>ViewCnt</td>
+                        <td>CommentCnt</td>
+                        <td>Tags</td>
+                        <td>Label</td> <!-- labelling 컬럼 추가 @ 2020.12.28 -->
+                    </tr>
+                </head>
+                <tbody id="videos">
+
+                </tbody>
+
+            </table>
+        </form>
     </div>
-    <br>
-    <!-- 그리드 출력 영역 -->
-    <table class="table table-horizontal table-bordered">
-        <thead class="thead-strong">
-            <tr>
-                <th>글번호</th>
-                <th>제목</th>
-                <th>작성자</th>
-                <th>최종수정일</th>
-            </tr>
-        </thead>
-        <tbody id="tbody">
-        {{#posts}}
-            <tr>
-                <td>{{id}}</td>
-                <td><a href="/posts/update/{{id}}">{{title}}</a></td>
-                <td>{{author}}</td>
-                <td>{{modifiedDate}}</td>
-            </tr>
-        {{/posts}}
-        </tbody>
-    </table>
 
 {{>layout/footer}}
