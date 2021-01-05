@@ -13,9 +13,9 @@
 
 {{>layout/header}}
 
-    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4.1</h1>
-    <h6>   - 기존 ds-youtube-search 프론트 로직 머지</h6>
-    <h6>   - YouTube API v3 이용한 크롤링 연동</h6>
+    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4.2</h1>
+    <h6>   - export 및 total results 위치변경</h6>
+    <h6>   - ajax 형식 controller 통신 개선</h6>
     <div class="col-md-12">
         <!-- login area -->
         <div class="row">
@@ -64,34 +64,26 @@
             </div>
         </div>
         <br>
-        <h2>다샤 Youtube Search (B/O Pilot ver 1.6.8 이관)</h2>
-        <form>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>다샤 Youtube Search (B/O Pilot ver 1.6.8 이관)</h2>
+                <input type="button" value="DB 등록" class="btn btn-info" id="export">
+                <div id="totalResults"></div>
+            </div>
+        </div>
+        <br>
+        <div class="form-group">
+            <input type="text" class="form-control" id="search">
+        </div>
+        <form id="channelInfo">
             <div class="form-group">
-                <input type="text" class="form-control" id="search">
+                <input type="text" class="form-control" id="nextPageToken">
             </div>
             <!--
             <div class="form-group">
-                <input type="submit" class="btn btn-danger" value="search">
-            </div>
-            -->
-        </form>
-        <form id="printOut">
-            <input type="button" value="export2" class="btn btn-info" id="export">
-        </form>
-        <form id="channelInfo">
-            <div class="form-group">
-                <!--<input type="text" class="form-control" id="totalResults">-->
-                <div id="totalResults">
-
-                </div>
-            </div>
-            <div class="form-group">
-                <!--<input type="text" class="form-control" id="nextPageToken">-->
-                <input type="text" class="form-control" id="nextPageToken">
-            </div>
-            <div class="form-group">
                 <input type="submit" class="btn btn-danger" value="next-page">
             </div>
+            -->
         </form>
         <form id="videoInfo">
             <!--<div class="row">-->
