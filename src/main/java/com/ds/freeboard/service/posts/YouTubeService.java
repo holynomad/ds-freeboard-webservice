@@ -1,7 +1,6 @@
 package com.ds.freeboard.service.posts;
 
 import com.ds.freeboard.domain.posts.YouTubeRepository;
-import com.ds.freeboard.domain.posts.YouTubeVideo;
 import com.ds.freeboard.web.dto.YouTubeSearchDto;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpRequest;
@@ -10,19 +9,16 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
-import com.google.api.services.youtube.model.SearchListResponse;
-import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
 import com.google.api.services.youtube.model.Video;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 @Service
 public class YouTubeService implements YouTubeRepository {
@@ -53,14 +49,22 @@ public class YouTubeService implements YouTubeRepository {
 
                 System.out.println(" Video Id" + singleVideo.getId());
                 System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
-                System.out
-                        .println(" contentDetails Duration: " + singleVideo.getContentDetails().getDuration());
+                System.out.println(" contentDetails Duration: " + singleVideo.getContentDetails().getDuration());
                 System.out.println(" Thumbnail: " + thumbnail.getUrl());
                 System.out.println("\n-------------------------------------------------------------\n");
 
                 youTubeDto.setThumbnailPath(thumbnail.getUrl());
                 youTubeDto.setTitle(singleVideo.getSnippet().getTitle());
                 youTubeDto.setVideoId(singleVideo.getId());
+                // 채널 및 비디오 상세항목 추가 @ 2021.01.06.
+                youTubeDto.setDescription(singleVideo.getSnippet().getDescription());
+                youTubeDto.setChannelId(singleVideo.getSnippet().getChannelId());
+                youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
+                youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
+                youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
+                youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
+                youTubeDto.setCommentCount(singleVideo.getStatistics().getCommentCount());
+                youTubeDto.setTags(singleVideo.getSnippet().getTags());
 
             }
         }
