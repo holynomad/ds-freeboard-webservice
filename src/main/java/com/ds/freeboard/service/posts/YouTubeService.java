@@ -10,8 +10,8 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
-import com.google.api.services.youtube.model.Video;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public class YouTubeService implements YouTubeRepository {
     /** Global instance properties filename. */
     private static String PROPERTIES_FILENAME = "youtube.properties";
 
-    private static void prettyPrint(Iterator<Video> iteratorSearchResults, YouTubeSearchDto youTubeDto) {
+    private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, YouTubeSearchDto youTubeDto) {
 
         System.out.println("\n=============================================================");
         System.out.println("=============================================================\n");
@@ -41,31 +41,38 @@ public class YouTubeService implements YouTubeRepository {
 
         while (iteratorSearchResults.hasNext()) {
 
-            Video singleVideo = iteratorSearchResults.next();
+            SearchResult singleVideo = iteratorSearchResults.next();
 
             // Double checks the kind is video.
-            if (singleVideo.getKind().equals("youtube#video")) {
+            if (singleVideo.getKind().equals("youtube#searchResult")) {
                 Thumbnail thumbnail = (Thumbnail) singleVideo.getSnippet().getThumbnails().get("default");
 
-                System.out.println(" Video Id" + singleVideo.getId());
+                System.out.println(" Video Id" + singleVideo.getId().getVideoId());
                 System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
-                System.out.println(" contentDetails Duration: " + singleVideo.getContentDetails().getDuration());
+                System.out.println(" Desc. : " + singleVideo.getSnippet().getDescription());
+                //System.out.println(" contentDetails Duration: " + singleVideo.getContentDetails().getDuration());
+
                 System.out.println(" Thumbnail: " + thumbnail.getUrl());
+                System.out.println(" Channel Id: " + singleVideo.getSnippet().getChannelId());
+                System.out.println(" Channel Title: " + singleVideo.getSnippet().getChannelTitle());
+                System.out.println(" PublishedAt : " + singleVideo.getSnippet().getPublishedAt());
+
                 System.out.println("\n-------------------------------------------------------------\n");
 
                 youTubeDto.setThumbnailPath(thumbnail.getUrl());
                 youTubeDto.setTitle(singleVideo.getSnippet().getTitle());
-                youTubeDto.setVideoId(singleVideo.getId());
+                youTubeDto.setVideoId(singleVideo.getId().getVideoId());
                 // 채널 및 비디오 상세항목 추가 @ 2021.01.06.
                 youTubeDto.setDescription(singleVideo.getSnippet().getDescription());
                 youTubeDto.setChannelId(singleVideo.getSnippet().getChannelId());
                 youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
-                youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
-                youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
-                youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
-                youTubeDto.setCommentCount(singleVideo.getStatistics().getCommentCount());
-                youTubeDto.setTags(singleVideo.getSnippet().getTags());
 
+                //youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
+                //youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
+                //youTubeDto.setCommentCount(singleVideo.getStatistics().getCommentCount());
+                //youTubeDto.setTags(singleVideo.getSnippet().getTags());
+
+                // 이 부분에 video:List 메소드 set-call 영역 코딩 필요 !!!!
             }
         }
     }
@@ -94,11 +101,24 @@ public class YouTubeService implements YouTubeRepository {
 
             //내가 원하는 정보 지정할 수 있어요. 공식 API문서를 참고해주세요.
             String apiKey = properties.getProperty("youtube.apikey");
-            YouTube.Videos.List videos = youtube.videos().list("id,snippet,contentDetails");
+            //YouTube.Videos.List videos = youtube.videos().list("id,snippet,contentDetails", "");
+            // API v3 video:list --> search:list 차환 @ 2021.01.07.
+            YouTube.Search.List videos = youtube.search().list("id,snippet,contentDetails");
             videos.setKey(apiKey); //### 여기에 앞서 받은 API키를 입력해야 합니다.
-            videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
+            //videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
+            videos.setType("video");
+            videos.setPart("snippet");
+            videos.setQ("IT+frontend");
             videos.setMaxResults(NUMBER_OF_VIDEOS_RETURNED); //조회 최대 갯수.
-            List<Video> videoList = videos.execute().getItems();
+
+
+
+            // 아래 execute 부분 개선 필요...
+            List<SearchResult> videoList = videos.execute().getItems();
+
+
+            // test
+            System.out.println(videoList);
 
             if (videoList != null) {
                 prettyPrint(videoList.iterator(), youTubeDto);
