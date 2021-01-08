@@ -12,6 +12,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
+import com.google.api.services.youtube.model.Video;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class YouTubeService implements YouTubeRepository {
     /** Global instance properties filename. */
     private static String PROPERTIES_FILENAME = "youtube.properties";
 
-    private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, YouTubeSearchDto youTubeDto) {
+    private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, YouTubeSearchDto youTubeDto, String apiKey) {
 
         System.out.println("\n=============================================================");
         System.out.println("=============================================================\n");
@@ -66,6 +67,7 @@ public class YouTubeService implements YouTubeRepository {
                 youTubeDto.setDescription(singleVideo.getSnippet().getDescription());
                 youTubeDto.setChannelId(singleVideo.getSnippet().getChannelId());
                 youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
+                youTubeDto.setPublishedDate(singleVideo.getSnippet().getPublishedAt());
 
                 //youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
                 //youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
@@ -73,8 +75,69 @@ public class YouTubeService implements YouTubeRepository {
                 //youTubeDto.setTags(singleVideo.getSnippet().getTags());
 
                 // 이 부분에 video:List 메소드 set-call 영역 코딩 필요 !!!!
+                // Video Id별 콘텐츠 상세보기 @ 2021.01.08.
+                getVideoDetails(singleVideo.getId().getVideoId(), youTubeDto, apiKey);
             }
         }
+    }
+
+    // Video Id별 콘텐츠 상세정보 조회 추가 @ 2021.01.08.
+    private static void getVideoDetails(String videoId, YouTubeSearchDto youTubeDto, String apiKey) {
+
+        System.out.println("\n********************");
+
+        try {
+            youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
+                public void initialize(HttpRequest request) throws IOException {
+                }
+            }).setApplicationName("youtube-video-contents-get").build();
+
+            //내가 원하는 정보 지정할 수 있어요. 공식 API문서를 참고해주세요.
+            String key = apiKey;
+            //YouTube.Videos.List videos = youtube.videos().list("id,snippet,contentDetails", "");
+            // API v3 video:list --> search:list 차환 @ 2021.01.07.
+            YouTube.Videos.List videos = youtube.videos().list("statistics,contentDetails");
+            videos.setKey(key); //### 여기에 앞서 받은 API키를 입력해야 합니다.
+            //videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
+            videos.setId(videoId);
+            videos.setPart("statistics");
+
+            // 아래 execute 부분 개선 필요...
+            List<Video> videoContents = videos.execute().getItems();
+
+            // test
+            System.out.println("&&&& success getting videoContents : " + videoContents.iterator());
+
+            if (videoContents != null) {
+
+                while (videoContents.iterator().hasNext()) {
+
+                    Video singleContents = videoContents.iterator().next();
+
+                    System.out.println(" contentDetails Duration: " + singleContents.getContentDetails().getDuration());
+                    System.out.println(" View Counts: " + singleContents.getStatistics().getViewCount());
+                    System.out.println(" Comment Counts: " + singleContents.getStatistics().getCommentCount());
+                    System.out.println(" Tags : " + singleContents.getSnippet().getTags());
+
+                    youTubeDto.setDuration(singleContents.getContentDetails().getDuration());
+                    youTubeDto.setViewCount(singleContents.getStatistics().getViewCount());
+                    youTubeDto.setCommentCount(singleContents.getStatistics().getCommentCount());
+                    youTubeDto.setTags(singleContents.getSnippet().getTags());
+                }
+            }
+
+        } catch (GoogleJsonResponseException e) {
+            System.err.println("There was a service error: " + e.getDetails().getCode() + " : "
+                    + e.getDetails().getMessage());
+        } catch (IOException e) {
+            System.err.println("There was an IO error: " + e.getCause() + " : " + e.getMessage());
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+
+
+        System.out.println("********************\n");
+
     }
 
     @Override
@@ -97,7 +160,7 @@ public class YouTubeService implements YouTubeRepository {
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) throws IOException {
                 }
-            }).setApplicationName("youtube-video-duration-get").build();
+            }).setApplicationName("youtube-search-list-get").build();
 
             //내가 원하는 정보 지정할 수 있어요. 공식 API문서를 참고해주세요.
             String apiKey = properties.getProperty("youtube.apikey");
@@ -121,7 +184,7 @@ public class YouTubeService implements YouTubeRepository {
             System.out.println(videoList);
 
             if (videoList != null) {
-                prettyPrint(videoList.iterator(), youTubeDto);
+                prettyPrint(videoList.iterator(), youTubeDto, apiKey);
             }
 
         } catch (GoogleJsonResponseException e) {
