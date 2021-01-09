@@ -56,7 +56,7 @@ public class YouTubeService implements YouTubeRepository {
                 System.out.println(" Thumbnail: " + thumbnail.getUrl());
                 System.out.println(" Channel Id: " + singleVideo.getSnippet().getChannelId());
                 System.out.println(" Channel Title: " + singleVideo.getSnippet().getChannelTitle());
-                System.out.println(" PublishedAt : " + singleVideo.getSnippet().getPublishedAt());
+                //System.out.println(" PublishedAt : " + singleVideo.getSnippet().getPublishedAt());
 
                 System.out.println("\n-------------------------------------------------------------\n");
 
@@ -67,7 +67,7 @@ public class YouTubeService implements YouTubeRepository {
                 youTubeDto.setDescription(singleVideo.getSnippet().getDescription());
                 youTubeDto.setChannelId(singleVideo.getSnippet().getChannelId());
                 youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
-                youTubeDto.setPublishedDate(singleVideo.getSnippet().getPublishedAt());
+                //youTubeDto.setPublishedDate(singleVideo.getSnippet().getPublishedAt());
 
                 //youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
                 //youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
@@ -96,7 +96,7 @@ public class YouTubeService implements YouTubeRepository {
             String key = apiKey;
             //YouTube.Videos.List videos = youtube.videos().list("id,snippet,contentDetails", "");
             // API v3 video:list --> search:list 차환 @ 2021.01.07.
-            YouTube.Videos.List videos = youtube.videos().list("statistics,contentDetails");
+            YouTube.Videos.List videos = youtube.videos().list("id,snippet,statistics,contentDetails");
             videos.setKey(key); //### 여기에 앞서 받은 API키를 입력해야 합니다.
             //videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
             videos.setId(videoId);
