@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -103,7 +104,7 @@ public class YouTubeService implements YouTubeRepository {
             videos.setPart("statistics");
 
             // 아래 execute 부분 개선 필요...
-            List<Video> videoContents = videos.execute().getItems();
+            ArrayList<Video> videoContents = (ArrayList<Video>) videos.execute().getItems();
 
             // test
             System.out.println("&&&& success getting videoContents : " + videoContents.iterator());
@@ -114,15 +115,18 @@ public class YouTubeService implements YouTubeRepository {
 
                     Video singleContents = videoContents.iterator().next();
 
-                    System.out.println(" contentDetails Duration: " + singleContents.getContentDetails().getDuration());
-                    System.out.println(" View Counts: " + singleContents.getStatistics().getViewCount());
-                    System.out.println(" Comment Counts: " + singleContents.getStatistics().getCommentCount());
-                    System.out.println(" Tags : " + singleContents.getSnippet().getTags());
+                    if (singleContents.getKind().equals("youtube#videoListResponse")) {
 
-                    youTubeDto.setDuration(singleContents.getContentDetails().getDuration());
-                    youTubeDto.setViewCount(singleContents.getStatistics().getViewCount());
-                    youTubeDto.setCommentCount(singleContents.getStatistics().getCommentCount());
-                    youTubeDto.setTags(singleContents.getSnippet().getTags());
+                        System.out.println(" contentDetails Duration: " + singleContents.getContentDetails().getDuration());
+                        System.out.println(" View Counts: " + singleContents.getStatistics().getViewCount());
+                        System.out.println(" Comment Counts: " + singleContents.getStatistics().getCommentCount());
+                        System.out.println(" Tags : " + singleContents.getSnippet().getTags());
+
+                        youTubeDto.setDuration(singleContents.getContentDetails().getDuration());
+                        youTubeDto.setViewCount(singleContents.getStatistics().getViewCount());
+                        youTubeDto.setCommentCount(singleContents.getStatistics().getCommentCount());
+                        youTubeDto.setTags(singleContents.getSnippet().getTags());
+                    }
                 }
             }
 
