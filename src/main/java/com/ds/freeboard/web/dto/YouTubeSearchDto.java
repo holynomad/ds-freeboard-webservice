@@ -1,5 +1,6 @@
 package com.ds.freeboard.web.dto;
 
+import com.google.api.client.util.DateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,7 +20,7 @@ public class YouTubeSearchDto {
     private String description; // 콘텐츠 설명
     private String channelId;   // 채널 ID
     private String channelTitle; // 채널명
-    private String publishedDate; // 콘텐츠 게시일시
+    private DateTime publishedDate; // 콘텐츠 게시일시
     private String duration;    // 콘텐츠 재생시간
     private BigInteger viewCount;   // 조회수
     private BigInteger commentCount;    // 댓글수
@@ -28,7 +29,7 @@ public class YouTubeSearchDto {
 
     @Builder(toBuilder = true)
     public YouTubeSearchDto(String title, String thumbnailPath, String videoId, String description,
-                            String channelId, String channelTitle, String publishedDate, String duration,
+                            String channelId, String channelTitle, DateTime publishedDate, String duration,
                             BigInteger viewCount, BigInteger commentCount, List<String> tags, String crawlYn
                             ) {
         this.title = title;

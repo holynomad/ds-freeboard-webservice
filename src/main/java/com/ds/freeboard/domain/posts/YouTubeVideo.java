@@ -1,5 +1,7 @@
 package com.ds.freeboard.domain.posts;
 
+import com.google.api.client.util.DateTime;
+
 import java.math.BigInteger;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class YouTubeVideo {
     private String title;
     private String url;
     private String thumbnailUrl;
-    private String publishDate;
+    private DateTime publishDate;
     private String description;
     // Channel 및 Video정보 추가 @ 2021.01.06.
     private String channelId;   // 채널 ID
@@ -36,10 +38,10 @@ public class YouTubeVideo {
     public void setThumbnailUrl(String thumbnailUrl) {
         this.thumbnailUrl = thumbnailUrl;
     }
-    public String getPublishDate() {
+    public DateTime getPublishDate() {
         return publishDate;
     }
-    public void setPublishDate(String publishDate) {
+    public void setPublishDate(DateTime publishDate) {
         this.publishDate = publishDate;
     }
     public String getDescription() {

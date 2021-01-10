@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -101,21 +100,21 @@ public class YouTubeService implements YouTubeRepository {
             videos.setKey(key); //### 여기에 앞서 받은 API키를 입력해야 합니다.
             //videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
             videos.setId(videoId);
-            videos.setPart("statistics");
+            videos.setPart("statistics,snippet,contentDetails");
 
             // 아래 execute 부분 개선 필요...
-            ArrayList<Video> videoContents = (ArrayList<Video>) videos.execute().getItems();
+            List<Video> videoContents = videos.execute().getItems();
 
             // test
-            System.out.println("&&&& success getting videoContents : " + videoContents.iterator());
+            System.out.println("&&&& success getting videoContents : " + videoContents);
 
             if (videoContents != null) {
-
-                while (videoContents.iterator().hasNext()) {
+                // while 문에서 무한 loop 발생하여 주석 @ 2021.01.10.
+                //while (videoContents.iterator().hasNext()) {
 
                     Video singleContents = videoContents.iterator().next();
 
-                    if (singleContents.getKind().equals("youtube#videoListResponse")) {
+                    if (singleContents.getKind().equals("youtube#video")) {
 
                         System.out.println(" contentDetails Duration: " + singleContents.getContentDetails().getDuration());
                         System.out.println(" View Counts: " + singleContents.getStatistics().getViewCount());
@@ -127,7 +126,7 @@ public class YouTubeService implements YouTubeRepository {
                         youTubeDto.setCommentCount(singleContents.getStatistics().getCommentCount());
                         youTubeDto.setTags(singleContents.getSnippet().getTags());
                     }
-                }
+                //}
             }
 
         } catch (GoogleJsonResponseException e) {
