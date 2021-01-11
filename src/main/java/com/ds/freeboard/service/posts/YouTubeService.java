@@ -9,6 +9,7 @@ import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.DateTime;
 import com.google.api.services.youtube.YouTube;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.Thumbnail;
@@ -17,6 +18,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -41,12 +46,20 @@ public class YouTubeService implements YouTubeRepository {
         }
 
         while (iteratorSearchResults.hasNext()) {
+            // 게시일시 포맷변환 관련 추가 @ 2021.01.11.
+            DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
 
             SearchResult singleVideo = iteratorSearchResults.next();
 
             // Double checks the kind is video.
             if (singleVideo.getKind().equals("youtube#searchResult")) {
+
                 Thumbnail thumbnail = (Thumbnail) singleVideo.getSnippet().getThumbnails().get("default");
+
+                //parse the date
+                DateTime dateTime = singleVideo.getSnippet().getPublishedAt();
+                Date date = new Date(dateTime.getValue());
+                String dateString = df.format(date);
 
                 System.out.println(" Video Id" + singleVideo.getId().getVideoId());
                 System.out.println(" Title: " + singleVideo.getSnippet().getTitle());
@@ -67,7 +80,7 @@ public class YouTubeService implements YouTubeRepository {
                 youTubeDto.setDescription(singleVideo.getSnippet().getDescription());
                 youTubeDto.setChannelId(singleVideo.getSnippet().getChannelId());
                 youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
-                //youTubeDto.setPublishedDate(singleVideo.getSnippet().getPublishedAt());
+                youTubeDto.setPublishedDate(dateString);
 
                 //youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
                 //youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
@@ -159,6 +172,7 @@ public class YouTubeService implements YouTubeRepository {
 
         YouTubeSearchDto youTubeDto = new YouTubeSearchDto();
 
+
         try {
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
                 public void initialize(HttpRequest request) throws IOException {
@@ -174,7 +188,8 @@ public class YouTubeService implements YouTubeRepository {
             //videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
             videos.setType("video");
             videos.setPart("snippet");
-            videos.setQ("IT+frontend");
+            String queryNotEncoded = "웹퍼블리싱";
+            videos.setQ("IT+" + URLEncoder.encode(queryNotEncoded, "UTF-8"));
             videos.setMaxResults(NUMBER_OF_VIDEOS_RETURNED); //조회 최대 갯수.
 
 
