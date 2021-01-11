@@ -13,8 +13,8 @@
 
 {{>layout/header}}
 
-    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4.4</h1>
-    <h6>   - YouTubeAPI v3 개선 : video Id별 세부콘텐츠 조회</h6>
+    <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4.5</h1>
+    <h6>   - YouTubeAPI v3 피봇 : YouTubeSearchService.java 및 YouTubeDemoController.java </h6>
     <!--<h6>   - ajax 형식 controller 통신 개선</h6>-->
     <div class="col-md-12">
         <!-- login area -->
@@ -61,6 +61,14 @@
         <div class="row">
             <div class="col-md-6">
                 <a href="/youtube" role="button" class="btn btn-primary">유튜브 API 테스트</a>
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="queryTerm">
+                <!--<input type="text" class="form-control" maxlength="64" th:field="*{queryTerm}" placeholder="For example: tom brady"/>-->
+                <div class="form-actions">
+                    <!--button type="submit" class="btn blue">Search YouTube</button>-->
+                    <a href="/youtubeDemo" role="button" class="btn btn-secondary">유튜브 API 데모</a>
+                </div>
             </div>
         </div>
         <br>
