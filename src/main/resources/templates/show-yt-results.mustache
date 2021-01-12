@@ -1,0 +1,37 @@
+{{>layout/header}}
+
+    <h1>스프링 부트 웹 Dynamic Shark 크롤링 리스트</h1>
+    <div class="col-md-12">
+
+        <!-- contents area -->
+        <!-- 자유게시판 그리드(테이블) 출력 영역 -->
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+            <tr>
+                <th>Link</th>
+                <th>비디오Id</th>
+                <th>채널Id</th>
+                <th>채널명</th>
+                <th>제목</th>
+                <th>설명</th>
+                <th>게시일시</th>
+                <th>재생시간</th>
+                <th>조회수</th>
+                <th>태그</th>
+                <th>라벨</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            {{#videos}}
+                <tr>
+                    <td>{{url}}</td>
+                    <!--<td><a href="/posts/update/{{id}}">{{title}}</a></td>-->
+                    <td>{{title}}</td>
+                    <td>{{publishDate}}</td>
+                </tr>
+            {{/videos}}
+            </tbody>
+        </table>
+    </div>
+
+{{>layout/footer}}
