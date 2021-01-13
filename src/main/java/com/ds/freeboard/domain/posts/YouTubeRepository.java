@@ -2,6 +2,8 @@ package com.ds.freeboard.domain.posts;
 
 import com.ds.freeboard.web.dto.YouTubeSearchDto;
 
+import java.util.List;
+
 public interface YouTubeRepository {
-    YouTubeSearchDto get();
+    List<YouTubeSearchDto> get();
 }

@@ -21,10 +21,7 @@ import java.io.InputStream;
 import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Service
 public class YouTubeService implements YouTubeRepository {
@@ -36,7 +33,8 @@ public class YouTubeService implements YouTubeRepository {
     /** Global instance properties filename. */
     private static String PROPERTIES_FILENAME = "youtube.properties";
 
-    private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, YouTubeSearchDto youTubeDto, String apiKey) {
+    //private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, YouTubeSearchDto youTubeDto, String apiKey, List<YouTubeSearchDto> videosJson) {
+    private static void prettyPrint(Iterator<SearchResult> iteratorSearchResults, String apiKey, List<YouTubeSearchDto> videosJson) {
 
         System.out.println("\n=============================================================");
         System.out.println("=============================================================\n");
@@ -46,6 +44,9 @@ public class YouTubeService implements YouTubeRepository {
         }
 
         while (iteratorSearchResults.hasNext()) {
+            // youTubeDto 인스턴스를 searchResults 인덱스 갱신 시점마다 새롭게 생성 @ 2021.01.13.
+            YouTubeSearchDto youTubeDto = new YouTubeSearchDto();
+
             // 게시일시 포맷변환 관련 추가 @ 2021.01.11.
             DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
 
@@ -82,20 +83,14 @@ public class YouTubeService implements YouTubeRepository {
                 youTubeDto.setChannelTitle(singleVideo.getSnippet().getChannelTitle());
                 youTubeDto.setPublishedDate(dateString);
 
-                //youTubeDto.setDuration(singleVideo.getContentDetails().getDuration());
-                //youTubeDto.setViewCount(singleVideo.getStatistics().getViewCount());
-                //youTubeDto.setCommentCount(singleVideo.getStatistics().getCommentCount());
-                //youTubeDto.setTags(singleVideo.getSnippet().getTags());
-
-                // 이 부분에 video:List 메소드 set-call 영역 코딩 필요 !!!!
                 // Video Id별 콘텐츠 상세보기 @ 2021.01.08.
-                getVideoDetails(singleVideo.getId().getVideoId(), youTubeDto, apiKey);
+                getVideoDetails(singleVideo.getId().getVideoId(), youTubeDto, apiKey, videosJson);
             }
         }
     }
 
     // Video Id별 콘텐츠 상세정보 조회 추가 @ 2021.01.08.
-    private static void getVideoDetails(String videoId, YouTubeSearchDto youTubeDto, String apiKey) {
+    private static void getVideoDetails(String videoId, YouTubeSearchDto youTubeDto, String apiKey, List<YouTubeSearchDto> videosJson) {
 
         System.out.println("\n********************");
 
@@ -122,6 +117,7 @@ public class YouTubeService implements YouTubeRepository {
             System.out.println("&&&& success getting videoContents : " + videoContents);
 
             if (videoContents != null) {
+
                 // while 문에서 무한 loop 발생하여 주석 @ 2021.01.10.
                 //while (videoContents.iterator().hasNext()) {
 
@@ -138,6 +134,9 @@ public class YouTubeService implements YouTubeRepository {
                         youTubeDto.setViewCount(singleContents.getStatistics().getViewCount());
                         youTubeDto.setCommentCount(singleContents.getStatistics().getCommentCount());
                         youTubeDto.setTags(singleContents.getSnippet().getTags());
+
+                        // getVideoDetails로 상세내역 한번 받아오면 JSonArray에 추가 @ 2021.01.13.
+                        videosJson.add(youTubeDto);
                     }
                 //}
             }
@@ -157,9 +156,11 @@ public class YouTubeService implements YouTubeRepository {
     }
 
     @Override
-    public YouTubeSearchDto get() {
+    //public YouTubeSearchDto get() {
+    public List<YouTubeSearchDto> get() {
 
         Properties properties = new Properties();
+
         try {
             InputStream in = YouTube.Search.class.getResourceAsStream("/" + PROPERTIES_FILENAME);
             properties.load(in);
@@ -170,8 +171,10 @@ public class YouTubeService implements YouTubeRepository {
             System.exit(1);
         }
 
-        YouTubeSearchDto youTubeDto = new YouTubeSearchDto();
+        //YouTubeSearchDto youTubeDto = new YouTubeSearchDto();
 
+        // NUMBER_OF_VIDEOS_RETURNED 만큼 loop 돌면서 video search 결과를 JSonArray List 형식으로 최종리턴할 변수 @ 2021.01.13.
+        List<YouTubeSearchDto> videosJson = new ArrayList<>();
 
         try {
             youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
@@ -188,21 +191,23 @@ public class YouTubeService implements YouTubeRepository {
             //videos.setId("EAyo3_zJj5c"); //### 여기에는 유튜브 동영상의 ID 값을 입력해야 합니다.
             videos.setType("video");
             videos.setPart("snippet");
-            String queryNotEncoded = "웹퍼블리싱";
+
+            // encoded URI 적용위한 변수 @ 2021.01.11.
+            String queryNotEncoded = "Python";
             videos.setQ("IT+" + URLEncoder.encode(queryNotEncoded, "UTF-8"));
+
             videos.setMaxResults(NUMBER_OF_VIDEOS_RETURNED); //조회 최대 갯수.
-
-
 
             // 아래 execute 부분 개선 필요...
             List<SearchResult> videoList = videos.execute().getItems();
 
-
             // test
-            System.out.println(videoList);
+            //System.out.println(videoList);
 
             if (videoList != null) {
-                prettyPrint(videoList.iterator(), youTubeDto, apiKey);
+                //prettyPrint(videoList.iterator(), youTubeDto, apiKey, videosJson);
+                prettyPrint(videoList.iterator(), apiKey, videosJson);
+
             }
 
         } catch (GoogleJsonResponseException e) {
@@ -214,7 +219,9 @@ public class YouTubeService implements YouTubeRepository {
             t.printStackTrace();
         }
 
-        return youTubeDto;
+        //return youTubeDto;
+        return videosJson;
+
     }
 
 
