@@ -1,6 +1,7 @@
 package com.ds.freeboard.web;
 
 import com.ds.freeboard.domain.posts.YouTubeRepository;
+import com.ds.freeboard.domain.posts.YouTubeSearchCriteria;
 import com.ds.freeboard.web.dto.YouTubeSearchDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,8 @@ public class YouTubeSearchController {
 
     @GetMapping("/youtube")
     public List<YouTubeSearchDto> Index() {
-        return youTubeProvider.get();
+        YouTubeSearchCriteria youtubeSearchCriteria = null;
+        return youTubeProvider.get(youtubeSearchCriteria.getQueryTerm());
     }
 
 }

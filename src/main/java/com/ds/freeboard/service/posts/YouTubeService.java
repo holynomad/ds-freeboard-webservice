@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -157,7 +156,8 @@ public class YouTubeService implements YouTubeRepository {
 
     @Override
     //public YouTubeSearchDto get() {
-    public List<YouTubeSearchDto> get() {
+    // add Input param "queryTerm" @ 2021.01.14.
+    public List<YouTubeSearchDto> get(String queryTerm) {
 
         Properties properties = new Properties();
 
@@ -193,8 +193,10 @@ public class YouTubeService implements YouTubeRepository {
             videos.setPart("snippet");
 
             // encoded URI 적용위한 변수 @ 2021.01.11.
-            String queryNotEncoded = "Python";
-            videos.setQ("IT+" + URLEncoder.encode(queryNotEncoded, "UTF-8"));
+            //String queryNotEncoded = "Python";
+            //videos.setQ("IT+" + URLEncoder.encode(queryNotEncoded, "UTF-8"));
+            // using input Param "queryTerm" @ 2021.01.14.
+            videos.setQ(queryTerm);
 
             videos.setMaxResults(NUMBER_OF_VIDEOS_RETURNED); //조회 최대 갯수.
 
