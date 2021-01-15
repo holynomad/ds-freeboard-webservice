@@ -2,17 +2,15 @@ var main = {
     init : function () {
         var _this = this;
         // 기존 #search를 임시테스트용 전환에 따른 #search-test로 변경 @ 2021.01.04.
-        $('#search-test').on('click', function () {
+        $('#search').on('dblclick', function () {
                 _this.search();
             }
         );
     },
     search : function () {
         var data = {
-            searchResults: $('#search-test').val()
+            searchResults: $('#search').val()
         };
-
-
 
         $.ajax({
             type: 'GET',
