@@ -23,8 +23,12 @@ public class YouTubeSearchController {
     }
 
     @GetMapping("/youtube")
-    //public List<YouTubeSearchDto> Index(Model model) {
-    public String Index(Model model) {
+    public List<YouTubeSearchDto> Index(Model model) {
+    //public String demo(Model model) {
+
+        System.out.println("YouTubeSearchController start !");
+
+
 
         //instantiate an empty address object
         YouTubeSearchCriteria youtubeSearchCriteria = new YouTubeSearchCriteria();
@@ -41,7 +45,8 @@ public class YouTubeSearchController {
         model.addAttribute("videos", videos);
 
         //return youTubeProvider.get(youtubeSearchCriteria.getQueryTerm());
-        return "redirect:show-yt-results";
+        return videos;
+        //return "index";
     }
 
 }
