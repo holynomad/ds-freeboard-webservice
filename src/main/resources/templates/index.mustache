@@ -58,53 +58,55 @@
             </tbody>
         </table>
         <!-- 다샤 콘텐츠 크롤링 영역 - 키워드-페이지-결과테이블 - 출력 영역 merge from ds-youtube-search\index.html @ 2021.01.04. -->
-        <div class="row">
-            <div class="col-md-6">
-                <!--<a href="/youtube" role="button" class="btn btn-primary">유튜브 API 테스트</a>-->
-                <button type="button" class="btn btn-primary" id="btn-search">유튜브 키워드 검색</button>
-            </div>
-            <div class="col-md-6">
-                <input type="text" class="form-control" id="queryTerm">
-                <!--<input type="text" class="form-control" maxlength="64" th:field="*{queryTerm}" placeholder="For example: tom brady"/>-->
-                <div class="form-actions">
-                    <!--button type="submit" class="btn blue">Search YouTube</button>-->
-                    <a href="/youtubeDemo" role="button" class="btn btn-secondary">유튜브 API 데모</a>
+        <form id="employeeForm" method="POST">
+            <div class="row">
+                <div class="col-md-6">
+                    <a href="/youtube" role="button" class="btn btn-primary">유튜브 API 테스트</a>
+                    <!--<button type="submit" class="btn btn-primary" id="btn-search">유튜브 키워드 검색</button>-->
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control" id="queryTerm">
+                    <!--<input type="text" class="form-control" maxlength="64" th:field="*{queryTerm}" placeholder="For example: tom brady"/>-->
+                    <div class="form-actions">
+                        <!--button type="submit" class="btn blue">Search YouTube</button>-->
+                        <a href="/youtubeDemo" role="button" class="btn btn-secondary">유튜브 API 데모</a>
+                    </div>
+                </div>
+                <h1>스프링 부트 웹 Dynamic Shark 크롤링 리스트</h1>
+                <div class="col-md-12">
+
+                    <!-- contents area -->
+                    <!-- 자유게시판 그리드 / 테이블 출력 영역 -->
+                    <table class="table table-horizontal table-bordered">
+                        <thead class="thead-strong">
+                        <tr>
+                            <th>Link</th>
+                            <th>비디오Id</th>
+                            <th>채널Id</th>
+                            <th>채널명</th>
+                            <th>제목</th>
+                            <th>설명</th>
+                            <th>게시일시</th>
+                            <th>재생시간</th>
+                            <th>조회수</th>
+                            <th>태그</th>
+                            <th>라벨</th>
+                        </tr>
+                        </thead>
+                        <tbody id="tbody">
+                        {{#videos}}
+                            <tr>
+                                <td>{{url}}</td>
+                                <!--<td><a href="/posts/update/{{id}}">{{title}}</a></td>-->
+                                <td>{{title}}</td>
+                                <td>{{publishDate}}</td>
+                            </tr>
+                        {{/videos}}
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <h1>스프링 부트 웹 Dynamic Shark 크롤링 리스트</h1>
-            <div class="col-md-12">
-
-                <!-- contents area -->
-                <!-- 자유게시판 그리드 / 테이블 출력 영역 -->
-                <table class="table table-horizontal table-bordered">
-                    <thead class="thead-strong">
-                    <tr>
-                        <th>Link</th>
-                        <th>비디오Id</th>
-                        <th>채널Id</th>
-                        <th>채널명</th>
-                        <th>제목</th>
-                        <th>설명</th>
-                        <th>게시일시</th>
-                        <th>재생시간</th>
-                        <th>조회수</th>
-                        <th>태그</th>
-                        <th>라벨</th>
-                    </tr>
-                    </thead>
-                    <tbody id="tbody">
-                    {{#videos}}
-                        <tr>
-                            <td>{{url}}</td>
-                            <!--<td><a href="/posts/update/{{id}}">{{title}}</a></td>-->
-                            <td>{{title}}</td>
-                            <td>{{publishDate}}</td>
-                        </tr>
-                    {{/videos}}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        </form>
         <br>
         <div class="row">
             <div class="col-md-6">
