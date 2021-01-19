@@ -14,7 +14,7 @@
 {{>layout/header}}
 
     <h1>스프링 부트 웹 Dynamic Shark 서비스 v2.4.6</h1>
-    <h6>   - YouTubeAPI searchResults (JSON) connects with show-yt-resutls.mustache </h6>
+    <h6>   - struggling to pass "SearchKeyword" to controller </h6>
     <!--<h6>   - ajax 형식 controller 통신 개선</h6>-->
     <div class="col-md-12">
         <!-- login area -->
@@ -58,11 +58,11 @@
             </tbody>
         </table>
         <!-- 다샤 콘텐츠 크롤링 영역 - 키워드-페이지-결과테이블 - 출력 영역 merge from ds-youtube-search\index.html @ 2021.01.04. -->
-        <form id="employeeForm" method="POST">
+        <!--<form id="employeeForm" method="POST">-->
             <div class="row">
                 <div class="col-md-6">
-                    <a href="/youtube" role="button" class="btn btn-primary">유튜브 API 테스트</a>
-                    <!--<button type="submit" class="btn btn-primary" id="btn-search">유튜브 키워드 검색</button>-->
+                    <!--<a href="/youtube" role="button" class="btn btn-primary">유튜브 API 테스트</a>-->
+                    <button type="submit" class="btn btn-primary" id="btn-search">유튜브 키워드 검색</button>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control" id="queryTerm">
@@ -106,7 +106,7 @@
                     </table>
                 </div>
             </div>
-        </form>
+        <!--</form>-->
         <br>
         <div class="row">
             <div class="col-md-6">
