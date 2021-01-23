@@ -17,15 +17,17 @@ var main = {
         var searchKeyword = $('#search').val()
 
         $.ajax({
-            type: 'GET',
-            url: '/youtube',
+            type: 'POST',
+            url: '/youtube/' + searchKeyword,
+            //type: 'GET',
+            //url: '/youtube',
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             //data: JSON.stringify(data)
-            data: searchKeyword
+            //data: searchKeyword
         }).done(function () {
             alert('검색하신 키워드의 유튜브 콘텐츠를 검색하였습니다.');
-            window.location.href = '/youtube';
+            window.location.href = '/show-yt-results';
         }).fail(function (error) {
             alert(JSON.stringify(error))
         });

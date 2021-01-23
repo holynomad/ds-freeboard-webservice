@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,13 +39,18 @@ public class YouTubeSearchController {
     }
 */
 
-    //@ResponseBody
-    @PostMapping(value = "/youtube")
-    //public List<YouTubeSearchDto> resultSubmit(@Valid YouTubeSearchCriteria youTubeSearchCriteria, String data2, Model model) {
-    public String resultSubmit(@PathVariable String searchKeyword, Model model) {
+    @ResponseBody
+    @PostMapping(value = "/youtube/{searchKeyword}")
+    //@RequestMapping(value = "/youtube", method = RequestMethod.GET)
+    public List<YouTubeSearchDto> resultSubmit(@Valid YouTubeSearchCriteria youTubeSearchCriteria, @PathVariable(value = "searchKeyword") String searchKeyword, Model model) {
+    //public String resultSubmit(@Valid YouTubeSearchCriteria youTubeSearchCriteria, @PathVariable(value = "searchKeyword") String searchKeyword, Model model) {
+    //public List<YouTubeSearchDto> resultSubmit(@Valid YouTubeSearchCriteria youTubeSearchCriteria, String searchKeyword, Model model) {
+    //public String resultSubmit(@PathVariable String searchKeyword, Model model) {
     //public String demo(Model model) {
 
-        System.out.println("YouTubeSearchController start !");
+        System.out.println("=================================");
+        System.out.println("YouTubeSearchController start ! ---> " + searchKeyword);
+
         //instantiate an empty address object
         YouTubeSearchCriteria youtubeSearchCriteria = new YouTubeSearchCriteria();
 
@@ -57,11 +63,12 @@ public class YouTubeSearchController {
         model.addAttribute("videos", videos);
 
         // logging
-        System.out.println(videos.toString());
+        //System.out.println(model.toString());
 
         //return youTubeProvider.get(youtubeSearchCriteria.getQueryTerm());
-        //return videos;
-        return "show-yt-results";
+        return videos;
+        //return searchKeyword;
+        //return "show-yt-results";
     }
 
 }
