@@ -21,13 +21,13 @@ public class YouTubeDemoController {
 
     //starting page for YouTube api demo
 
-    @RequestMapping(value = "/youtubeDemo", method = RequestMethod.GET)
+    @RequestMapping(value = "/youtubeDemo/{searchKeyword}", method = RequestMethod.POST)
     //@ResponseBody
     //@PostMapping(value = "/youtubeDemo/{searchKeyword}")
-    //public String youtubeDemo(Model model, @PathVariable(value = "searchKeyword") String searchKeyword) {
-    public String youtubeDemo(Model model) {
-        //System.out.println("=================================");
-        //System.out.println("[/youtubeDemo] YouTubeSearchController start ! ---> " + searchKeyword);
+    public String youtubeDemo(Model model, @PathVariable(value = "searchKeyword") String searchKeyword) {
+    //public String youtubeDemo(Model model, String searchKeyword) {
+        System.out.println("=================================");
+        System.out.println("[/youtubeDemo] YouTubeSearchController start ! ---> " + searchKeyword);
 
         //instantiate an empty address object
         YouTubeSearchCriteria youtubeSearchCriteria = new YouTubeSearchCriteria();
@@ -37,8 +37,8 @@ public class YouTubeDemoController {
 
         //get out
         //return "youtubeDemo";
-        return "show-yt-results";
-        //return "index";
+        //return "show-yt-results";
+        return "index";
     }
 
 

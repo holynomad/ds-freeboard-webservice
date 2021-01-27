@@ -8,19 +8,21 @@ var main = {
         );
     },
     search : function () {
-        alert('yt-search start !');
+        //alert('yt-search start !');
+        alert('[youtubeDemo] yt-search start !');
 
         //var data = {
         //    searchResults: $('#search').val()
         //};
 
-        var searchKeyword = $('#search').val()
+        //var searchKeyword = $('#search').val()
+        var searchKeyword = $('#queryTerm').val()
 
         $.ajax({
             type: 'POST',
-            url: '/youtube/' + searchKeyword,
+            //url: '/youtube/' + searchKeyword,
             //type: 'GET',
-            //url: '/youtube',
+            url: '/youtubeDemo/' + searchKeyword,
             dataType: 'json',
             contentType: 'application/json; charset=utf-8',
             //data: JSON.stringify(data)
